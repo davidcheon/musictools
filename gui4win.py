@@ -56,10 +56,14 @@ class searchanddownload(object):
 				os.mkdir(path)
 			for n in selections:
 				title=self.songs[n][0]
-				title=title.replace('/','-')+'.mp3'
-				id=self.songs[n][1]
-				filename=os.path.join(path,title).decode('utf-8','ignore')
+				title=title.replace('/','-')
+#				try:
+#					attach=urllib2.urlopen(url).headers.dict['content-disposition'].strip('"\'').rsplit('.')[-1]
+#				except KeyError,e:
+				attach='mp3'
+				filename=os.path.join(path,title).decode('utf-8','ignore')+'.%s'%(attach)
 				if not os.path.exists(filename):
+					id=self.songs[n][1]
 					url=searchanddownload.DOWNLOAD_URL%id
 					with open(filename,'wb+') as f:
 						content=urllib2.urlopen(url).read()
@@ -261,7 +265,7 @@ class mygui(wx.Frame):
 		dialog=wx.ProgressDialog(u'진도보기',title,progressMax,style=wx.PD_CAN_ABORT)
 
 	def showmessage(self,msg):
-		dlg=wx.MessageDialog(self.panel,str(msg),caption='Error',style=wx.OK)
+		dlg=wx.MessageDialog(self.panel,msg,caption='Error',style=wx.OK)
 		dlg.ShowModal()
 		dlg.Destroy()
 class downloadThreadupdate(threading.Thread):
